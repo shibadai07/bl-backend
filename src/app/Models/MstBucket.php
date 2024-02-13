@@ -9,4 +9,5 @@ class MstBucket extends Model
 {
     use HasFactory;
     protected $table = 'mst_bucket';
+    
 }

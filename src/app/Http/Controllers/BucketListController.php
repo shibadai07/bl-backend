@@ -15,15 +15,11 @@ class BucketListController extends Controller
         return response()->json(['bucketlist' => $bucketList], 200);
     }
 
-    public function store(Request $request)
+    public function storeNewBucket(Request $request)
     {
-        // // バリデーションを適用する場合は、必要に応じて追加してください
-        // $validatedData = $request->validate([
-        //     'bucket_name' => 'required|max:50',
-        //     'bucket_detail' => 'required|max:200',
-        //     // 他のフィールドに対するバリデーションも追加する
-        // ]);
+        //TODO バリデーション
 
+        
         // データベースに新しいバケットを挿入
         $bucket = new MstBucket;
         $bucket->bucket_name = $request['bucket_name'];
@@ -36,5 +32,14 @@ class BucketListController extends Controller
         $bucket->save();
 
         return response()->json(['message' => 'Bucket created successfully'], 201);
+    }
+
+
+
+    //Myバケットリストに追加する
+    public function addMyBucekt(Request $request){
+    
+
+
     }
 }
