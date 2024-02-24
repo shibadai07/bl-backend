@@ -16,7 +16,7 @@ class TblUserBucket extends Model
         $tbl_user_bucket->bucket_bucket_id = $request['bucket_id'];
         $tbl_user_bucket->status_id = $request['status_id'];
         $tbl_user_bucket->create_date = now()->toDateTimeString();
-        $tbl_user_bucket->update_date = now()->toDateTimeString();
+        $tbl_user_bucket->update_date = now()->toDateTimeString()
         $tbl_user_bucket->timestamps = false;
         $tbl_user_bucket->save();
     }
