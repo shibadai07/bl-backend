@@ -4,42 +4,69 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MstBucket;
+use App\Models\TblUserBucket;
+use Illuminate\Support\Facades\Log;
+
 
 class BucketListController extends Controller
 {
-    public function getBucketList()
+    // Myバケットリストを一覧を取得する
+    public function getMyBucketList(Request $request)
     {
-        // バケットリスト一覧を取得
-        $bucketList = MstBucket::all();
-
-        return response()->json(['bucketlist' => $bucketList], 200);
+        log::info('getMyBucketList');
+        //postのリクエストボディからuser_idを取得
+        $user_id = $request->input('user_id');
+        //user_idを元にバケットリストを取得
+        $tblUserBucket = new \App\Models\TblUserBucket();
+        $bucketList = $tblUserBucket->getMyBucketList($user_id);
+        //取得したバケットリストを返却
+        return response()->json($bucketList);
     }
 
-    public function storeNewBucket(Request $request)
+    // バケットを追加する
+    public function addMyBucket(Request $request)
     {
-        //TODO バリデーション
-
-        
-        // データベースに新しいバケットを挿入
-        $bucket = new MstBucket;
-        $bucket->bucket_name = $request['bucket_name'];
-        $bucket->bucket_detail = $request['bucket_detail'] ?? null;
-        $bucket->create_date = now()->toDateTimeString();
-        $bucket->create_user = "shibadai";
-        $bucket->update_date = now()->toDateTimeString();
-        $bucket->update_user = "shibadai";
-        $bucket->timestamps = false;
-        $bucket->save();
-
-        return response()->json(['message' => 'Bucket created successfully'], 201);
+        //postのリクエストボディからuser_idとbucket_idを取得
+        $user_id = $request->input('user_id');
+        $bucket_id = $request->input('bucket_id');
+        $bucket_id = $request->input('status_id');
+        //user_idとbucket_idを元にバケットを追加
+        $tblUserBucket = new \App\Models\TblUserBucket();
+        $tblUserBucket->addMyBucket($user_id, $bucket_id);
+        //追加したバケットを返却
+        return response()->json(['result' => $res]);
     }
 
+    // バケットリストを新規で作成する
+    public function createNewBucket(Request $request)
+    {
+        //postのリクエストボディからバケット名、バケット詳細、公開フラグを取得
+        $bucket_name = $request->input('bucket_name');
+        $bucket_detail = $request->input('bucket_detail');
+        $publish_flg = $request->input('publish_flg');
 
+        //createBucket実行
+        $mstBucket = new \App\Models\MstBucket();
+        $bucket_id = $mstBucket->createBucket($bucket_name, $bucket_detail, $publish_flg);
 
-    //Myバケットリストに追加する
-    public function addMyBucekt(Request $request){
-    
+        //自分のバケットにも追加
+        $tblUserBucket = new \App\Models\TblUserBucket();
+        $tblUserBucket->addMyBucket($user_id, $bucket_id);
 
+        //作成したバケットを返却
+        return response()->json(['result' => $res]);
+    }
 
+    // バケットリストを削除する
+    public function deleteMyBucket(Request $request)
+    {
+        //postのリクエストボディからuser_idとbucket_idを取得
+        $user_id = $request->input('user_id');
+        $bucket_id = $request->input('bucket_id');
+        //user_idとbucket_idを元にバケットリストを削除
+        $tblUserBucket = new \App\Models\TblUserBucket();
+        $res = $tblUserBucket->deleteMyBucket($user_id, $bucket_id);
+        //削除したバケットを返却
+        return response()->json(['result' => $res]);
     }
 }

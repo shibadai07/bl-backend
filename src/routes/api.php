@@ -21,7 +21,9 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1'], function () {
     //マイバケットリスト一覧を取得するAPI
-    Route::get('/get-bucketlist', [BucketListController::class, 'getBucketList']);
+    Route::post('/buckets/get-my-bucketlist', [BucketListController::class, 'getMyBucketList']);
     //新規でバケットリストを作成するAPI
-    Route::post('/store-new-bucket', [BucketListController::class, 'storeNewBucket']);
+    Route::post('/buckets/add-my-bucket', [BucketListController::class, 'addMyBucket']);
+    //バケットリストを新規で作成+追加するAPI
+    Route::post('/buckets/create-new-bucket', [BucketListController::class, 'createNewBucket']);
 });
