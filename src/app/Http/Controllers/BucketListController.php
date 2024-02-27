@@ -13,6 +13,7 @@ class BucketListController extends Controller
     // Myバケットリストを一覧を取得する
     public function getMyBucketList(Request $request)
     {
+        log::info('git push test');
         log::info('getMyBucketList');
         //postのリクエストボディからuser_idを取得
         $user_id = $request->input('user_id');
